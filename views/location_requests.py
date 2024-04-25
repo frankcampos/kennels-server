@@ -1,3 +1,8 @@
+import json
+import sqlite3
+from models import Location
+
+
 LOCATIONS = [
     {
         "id": 1,
@@ -11,28 +16,59 @@ LOCATIONS = [
     }
 ]
 
+
 def get_all_locations():
-    return LOCATIONS
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        SELECT
+            a.id,
+            a.name,
+            a.address
+        FROM location a
+        """)
+        locations = []
+
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+
+            location = Location(row['id'], row['name'], row['address'])
+
+            locations.append(location.__dict__)
+    return locations
+
 
 def get_single_location(id):
-    requested_location = None
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
 
-    for location in LOCATIONS:
-        if location["id"] == id:
-            requested_location = location
+        # Use a ? parameter to inject a variable's value
+        # into the SQL statement.
 
-    return requested_location
+        db_cursor.execute("""
+        SELECT
+            a.id,
+            a.name,
+            a.address
+
+        FROM animal a
+        WHERE a.id = ?
+        """, (id, ))
+
+        # Load the single result into memory
+        data = db_cursor.fetchone()
+
+        # Create an animal instance from the current row
+        location = Location(data['id'], data['name'], data['address'])
+
+        return location.__dict__
 
 def create_location(location):
-    max_id = LOCATIONS[-1]["id"]
-    new_id = max_id + 1
-
-    location["id"] = new_id
-
-    LOCATIONS.append(location)
-
-    return location
-
+    pass
 def delete_location(id):
     location_index = -1
 
@@ -42,6 +78,7 @@ def delete_location(id):
 
     if location_index >= 0:
         LOCATIONS.pop(location_index)
+
 
 def update_location(id, new_location):
 

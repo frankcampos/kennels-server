@@ -58,4 +58,41 @@ INSERT INTO `Animal` VALUES (null, "Cleo", "Kennel", "Poodle", 2, 2);
 INSERT INTO `Animal` VALUES (null, "Popcorn", "Kennel", "Beagle", 3, 2);
 INSERT INTO `Animal` VALUES (null, "Curly", "Treatment", "Poodle", 4, 2);
 
-DROP TABLE IF EXISTS Animal;
+-- DROP TABLE IF EXISTS Animal;
+
+-- Get only the animal rows where the `id` field value is 3
+SELECT
+    a.id,
+    a.name,
+    a.breed,
+    a.status,
+    a.location_id,
+    a.customer_id
+FROM animal a
+WHERE a.id = 3
+
+
+SELECT
+		a.id,
+		a.name,
+		a.address
+FROM location a
+WHERE a.id = 1
+
+
+SELECT
+		c.id,
+		c.name,
+		c.addresss,
+		c.email,
+		c.password
+FROM customer c
+WHERE c.id = 1
+
+SELECT
+		e.id,
+		e.name,
+		e.address,
+		e.location_id
+FROM employee e
+WHERE e.id = 1
