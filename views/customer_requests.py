@@ -8,11 +8,12 @@ CUSTOMERS = [
         "id": 1,
         "name": "Hannah Hall",
     },
-     {
+    {
         "id": 1,
         "name": "Ryan Tanay"
     }
 ]
+
 
 def get_all_customers():
     """ get all customers """
@@ -35,10 +36,12 @@ def get_all_customers():
         dataset = db_cursor.fetchall()
 
         for row in dataset:
-            customer = Customer(row['id'], row['name'],row['address'],row['email'],row['password'])
+            customer = Customer(
+                row['id'], row['name'], row['address'], row['email'], row['password'])
 
             customers.append(customer.__dict__)
         return customers
+
 
 def get_single_customer(id):
     """get single customer by id"""
@@ -59,9 +62,11 @@ def get_single_customer(id):
 
         data = db_cursor.fetchone()
 
-        customer = Customer(data['id'], data['name'],data['address'],data['email'],data['password'])
+        customer = Customer(data['id'], data['name'],
+                            data['address'], data['email'], data['password'])
 
         return customer.__dict__
+
 
 def create_customer(customer):
     """create a new customer"""
@@ -74,6 +79,7 @@ def create_customer(customer):
 
     return customer
 
+
 def delete_customer(id):
     """delete customer"""
     customer_index = -1
@@ -85,9 +91,40 @@ def delete_customer(id):
     if customer_index >= 0:
         CUSTOMERS.pop(customer_index)
 
+
 def update_customer(id, new_customer):
 
     for index, customer in enumerate(CUSTOMERS):
         if customer['id'] == id:
-            CUSTOMERS[index]= new_customer
+            CUSTOMERS[index] = new_customer
             break
+# TODO: you will get an error about the address on customer. Look through the customer model and requests to see if you can solve the issue.
+
+
+def get_customer_by_email(email):
+
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        # Write the SQL query to get the information you want
+        db_cursor.execute("""
+        select
+            c.id,
+            c.name,
+            c.address,
+            c.email,
+            c.password
+        from Customer c
+        WHERE c.email = ?
+        """, (email, ))
+
+        customers = []
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+            customer = Customer(
+                row['id'], row['name'], row['address'], row['email'], row['password'])
+            customers.append(customer.__dict__)
+
+    return customers

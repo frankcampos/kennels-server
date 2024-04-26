@@ -68,7 +68,8 @@ def get_single_location(id):
         return location.__dict__
 
 def create_location(location):
-    pass
+    location_id = 0
+    return location_id
 def delete_location(id):
     location_index = -1
 
