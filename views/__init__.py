@@ -6,6 +6,7 @@ from .animal_requests import (
     update_animal,
     get_animals_by_location,
     get_animal_by_status
+
 )
 from .location_requests import (
     get_all_locations,

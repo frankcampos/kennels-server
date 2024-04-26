@@ -125,15 +125,13 @@ def create_animal(animal):
 
 
 def delete_animal(id):
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+        db_cursor = conn.cursor()
 
-    animal_index = -1
-
-    for index, animal in enumerate(ANIMALS):
-        if animal["id"] == id:
-            animal_index = index
-
-    if animal_index >= 0:
-        ANIMALS.pop(animal_index)
+        db_cursor.execute("""
+        DELETE FROM animal
+        WHERE id = ?
+        """, (id, ))
 
 
 def update_animal(id, new_animal):
@@ -141,6 +139,7 @@ def update_animal(id, new_animal):
         if animal['id'] == id:
             ANIMALS[index] = new_animal
             break
+
 
 def get_animals_by_location(location_id):
     with sqlite3.connect("./kennel.sqlite3") as conn:
@@ -169,6 +168,7 @@ def get_animals_by_location(location_id):
             animals.append(animal.__dict__)
 
     return animals
+
 
 def get_animal_by_status(status):
     with sqlite3.connect("./kennel.sqlite3") as conn:
