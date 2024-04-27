@@ -101,3 +101,6 @@ WHERE e.id = 1
 INSERT INTO `Animal` VALUES (null, "Daps", "Kennel", "Boxer", 2, 2);
 
 INSERT INTO `Employee` VALUES (null, "Hannah Hall", "204 Empty Ave", 1);
+
+SELECT DISTINCT *
+FROM Customer;

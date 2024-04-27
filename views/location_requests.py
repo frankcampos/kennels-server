@@ -67,23 +67,45 @@ def get_single_location(id):
 
         return location.__dict__
 
+
 def create_location(location):
-    location_id = 0
-    return location_id
+    max_id = LOCATIONS[-1]["id"]
+    new_id = max_id + 1
+
+    location["id"] = new_id
+
+    LOCATIONS.append(location)
+    return location
+
+
 def delete_location(id):
-    location_index = -1
+    """Delete a location by Id"""
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+        db_cursor = conn.cursor()
 
-    for index, location in enumerate(LOCATIONS):
-        if location["id"] == id:
-            location_index = index
-
-    if location_index >= 0:
-        LOCATIONS.pop(location_index)
+        db_cursor.execute("""
+        DELETE FROM location
+        WHERE id = ?
+        """, (id, ))
+    return "you deleted a location successfully"
 
 
 def update_location(id, new_location):
 
-    for index, location in enumerate(LOCATIONS):
-        if location['id'] == id:
-            LOCATIONS[index] = new_location
-            break
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        UPDATE location
+            SET
+                name = ?,
+                address = ?
+        WHERE id = ?
+        """, (new_location['name'], new_location['address'], id))
+
+        rows_affected = db_cursor.rowcount
+
+    if rows_affected == 0:
+        return False
+    else:
+        return True

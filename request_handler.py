@@ -178,22 +178,31 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         (resource, id) = self.parse_url(self.path)
 
+        success = False
+
         if resource == "animals":
-            update_animal(id, post_body)
+            success = update_animal(id, post_body)
 
         self.wfile.write("".encode())
 
         if resource == "locations":
-            update_location(id, post_body)
+            success = update_location(id, post_body)
         self.wfile.write("".encode())
 
         if resource == 'employees':
-            update_employee(id, post_body)
+            success = update_employee(id, post_body)
         self.wfile.write("".encode())
 
         if resource == 'customers':
             update_customer(id, post_body)
         self.wfile.write("".encode())
+
+        if success:
+            self._set_headers(204)
+            # self.wfile.write("update successful".encode())
+        else:
+            self._set_headers(404)
+            # self.wfile.write("no found".encode())
 
     def parse_url(self, path):
         """Parse the url into the resource and id"""
